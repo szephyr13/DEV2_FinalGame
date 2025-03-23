@@ -2,32 +2,57 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Rigidbody rb;
+    [Header("Movement")]
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private Transform camera; 
     private float inputH;
     private float inputV;
-    [SerializeField] private float jumpForce;
-    [SerializeField] private float movementForce;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private CharacterController controller;
+    private Animator anim;
+
+
+
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        //hides cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        //gets character controller
+        controller = GetComponent<CharacterController>();
+        anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        inputH = Input.GetAxisRaw("Horizontal");
-        inputV = Input.GetAxisRaw("Vertical");
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
+        MovementLogic();
     }
 
-    //continue physics - time based
-    private void FixedUpdate()
+    private void MovementLogic()
     {
-        rb.AddForce(new Vector3(inputH, 0, inputV) * movementForce, ForceMode.Force);
+        //reads input
+        inputH = Input.GetAxisRaw("Horizontal");
+        inputV = Input.GetAxisRaw("Vertical");
 
+        //reads camera to move and blocks movement
+        Vector3 movementDirection = (camera.forward * inputV + camera.right * inputH).normalized;
+        movementDirection.y = 0;
+
+        //translates movement to place and animation
+        controller.Move(movementDirection * movementSpeed * Time.deltaTime);
+        anim.SetFloat("speed", controller.velocity.magnitude);
+
+        if (inputH != 0 || inputV != 0) 
+        {
+            RotateToDestination(movementDirection);
+        }
+        
+    }
+
+    private void RotateToDestination(Vector3 destination) 
+    {
+        //gets rotation angle for player
+        Quaternion targetRotation = Quaternion.LookRotation(destination);
+        transform.rotation = targetRotation;
     }
 }
