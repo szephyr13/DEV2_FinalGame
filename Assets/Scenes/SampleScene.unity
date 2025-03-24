@@ -269,15 +269,15 @@ MonoBehaviour:
       Radius: 1
       Height: 1.19
     Center:
-      Radius: 1.65
+      Radius: 1.5
       Height: 0
     Bottom:
       Radius: 0.61
-      Height: -0.83
+      Height: -1.46
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 0
+    Value: 14.26
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -357,8 +357,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1096431}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -1.04693165e-17, z: -6.2974046e-18, w: 1}
-  m_LocalPosition: {x: 58.734493, y: 1.08, z: -45.702488}
+  m_LocalRotation: {x: -2.7472667e-17, y: 0.12412119, z: 3.1221634e-18, w: 0.99226713}
+  m_LocalPosition: {x: 58.36479, y: 2.56, z: -45.50569}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22410,7 +22410,7 @@ Transform:
   m_GameObject: {fileID: 1423506054}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00021743774, y: 1.08, z: 0.0005760193}
+  m_LocalPosition: {x: 0, y: 1.28, z: 0.0005760193}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22579,8 +22579,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1424248343}
   serializedVersion: 2
-  m_LocalRotation: {x: -6.5929523e-35, y: -1.04693165e-17, z: 0, w: 1}
-  m_LocalPosition: {x: 58.734493, y: 1.08, z: -45.702488}
+  m_LocalRotation: {x: -2.7433951e-17, y: 0.1241212, z: 3.4316717e-18, w: 0.9922671}
+  m_LocalPosition: {x: 58.36479, y: 2.56, z: -45.50569}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38270,7 +38270,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4266604696602033258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -39218,8 +39218,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 58.734276, y: 0, z: -44.053062}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 628364670338816853}
   - {fileID: 8603657119921888510}
@@ -39263,7 +39263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d39bdf57f344d8f814d51c42cefae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  movementSpeed: 4
   camera: {fileID: 1424248348}
 --- !u!54 &4266604696602033261
 Rigidbody:
