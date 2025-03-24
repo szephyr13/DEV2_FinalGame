@@ -5,9 +5,19 @@ public class Player : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float movementSpeed;
+    [SerializeField] private float gravityFactor;
     [SerializeField] private Transform cam; 
     private Vector3 movementDirection;
     private Vector3 inputDirection; 
+    private Vector3 verticalSpeed;
+
+
+    [Header("Ground Detection")]
+    [SerializeField] private Transform feetPosition;
+    [SerializeField] private float groundDetectionDistance;
+    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private float jumpHeight;
+
 
 
     //input, controller, animations
@@ -25,12 +35,16 @@ public class Player : MonoBehaviour
     private void MoveAction(Vector2 ctx)
     {
         inputDirection = new Vector3(ctx.x, 0, ctx.y);
-        RotateToDestination();
     }
 
     private void JumpAction()
     {
-        Debug.Log("Player Jumps");
+        if (CheckOnGround()) 
+        {
+            //verticalSpeed.y = Mathf.Sqrt(-2 * gravityFactor * jumpHeight);
+            anim.SetTrigger("jump");
+        }
+        
     }
 
 
@@ -49,6 +63,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         MovementLogic();
+
+        if (CheckOnGround() && verticalSpeed.y < 0)
+        {
+            verticalSpeed.y = 0;
+        }
+        CheckGravity();
     }
 
     private void MovementLogic()
@@ -60,6 +80,12 @@ public class Player : MonoBehaviour
         //translates movement to place and animation
         controller.Move(movementDirection * movementSpeed * Time.deltaTime);
         anim.SetFloat("speed", controller.velocity.magnitude);
+
+        //rotation logic
+        if (movementDirection.sqrMagnitude > 0) 
+        {
+            RotateToDestination();
+        }
     }
 
     private void RotateToDestination() 
@@ -67,5 +93,21 @@ public class Player : MonoBehaviour
         //gets rotation angle for player
         Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
         transform.rotation = targetRotation;
+    }
+
+    private void CheckGravity() 
+    {
+        verticalSpeed.y += gravityFactor * Time.deltaTime;
+        controller.Move(verticalSpeed * Time.deltaTime);
+    }
+
+    private bool CheckOnGround() 
+    {  
+        return Physics.CheckSphere(feetPosition.position, groundDetectionDistance, whatIsGround);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(feetPosition.position, groundDetectionDistance);
     }
 }
