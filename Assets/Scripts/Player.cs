@@ -1,15 +1,38 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float movementSpeed;
-    [SerializeField] private Transform camera; 
-    private float inputH;
-    private float inputV;
+    [SerializeField] private Transform cam; 
+    private Vector3 movementDirection;
+    private Vector3 inputDirection; 
 
+
+    //input, controller, animations
+    [Header("Input")]
+    [SerializeField] private InputManagerSO inputManager;
     private CharacterController controller;
     private Animator anim;
+
+    void OnEnable()
+    {
+        inputManager.OnJumping += JumpAction;
+        inputManager.OnMoving += MoveAction;
+    }
+
+    private void MoveAction(Vector2 ctx)
+    {
+        inputDirection = new Vector3(ctx.x, 0, ctx.y);
+        RotateToDestination();
+    }
+
+    private void JumpAction()
+    {
+        Debug.Log("Player Jumps");
+    }
+
 
 
 
@@ -30,29 +53,19 @@ public class Player : MonoBehaviour
 
     private void MovementLogic()
     {
-        //reads input
-        inputH = Input.GetAxisRaw("Horizontal");
-        inputV = Input.GetAxisRaw("Vertical");
-
         //reads camera to move and blocks movement
-        Vector3 movementDirection = (camera.forward * inputV + camera.right * inputH).normalized;
+        movementDirection = cam.forward * inputDirection.z + cam.right * inputDirection.x;
         movementDirection.y = 0;
 
         //translates movement to place and animation
         controller.Move(movementDirection * movementSpeed * Time.deltaTime);
         anim.SetFloat("speed", controller.velocity.magnitude);
-
-        if (inputH != 0 || inputV != 0) 
-        {
-            RotateToDestination(movementDirection);
-        }
-        
     }
 
-    private void RotateToDestination(Vector3 destination) 
+    private void RotateToDestination() 
     {
         //gets rotation angle for player
-        Quaternion targetRotation = Quaternion.LookRotation(destination);
+        Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
         transform.rotation = targetRotation;
     }
 }
