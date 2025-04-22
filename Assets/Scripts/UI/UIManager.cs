@@ -1,5 +1,8 @@
+using Unity.AppUI.UI;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -7,6 +10,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject optionsSet;
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private UnityEngine.UI.Button menuPrimarySelection;
+    [SerializeField] private UnityEngine.UI.Button optionsPrimarySelection; 
 
 
     //BUTTON INTERACTION
@@ -22,6 +27,13 @@ public class UIManager : MonoBehaviour
         AudioManager.instance.PlaySFX("Click");
         mainButtonsSet.SetActive(!mainButtonsSet.activeSelf);
         optionsSet.SetActive(!optionsSet.activeSelf);
+        if (mainButtonsSet.activeSelf)
+        {
+            menuPrimarySelection.Select();
+        } else 
+        {
+            optionsPrimarySelection.Select();
+        }
     }
 
     public void ExitButton()

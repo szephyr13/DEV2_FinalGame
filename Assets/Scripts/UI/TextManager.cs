@@ -17,13 +17,28 @@ public class TextManager : MonoBehaviour
     [SerializeField] private bool typingOver;
     [SerializeField] private GameObject generalManager;
 
+    private Player player;
+
+
+
     public ConversationPart Text { get => text; set => text = value; }
+
+
+    void Start()
+    {
+        player = FindAnyObjectByType<Player>();
+    }
 
     //lists text to write on screen and enqueues it. then starts showing
     public void StartDialogue()
     {
         Debug.Log("Text Manager executed by " + this.gameObject.name);
         dialogUI.SetActive(true);
+        if (player) 
+        {
+            player.IsPaused = true;
+        }
+        
         introduction = new Queue<string>();
         typingOver = true;
 
@@ -74,6 +89,11 @@ public class TextManager : MonoBehaviour
     private void EndDialogue()
     {
         dialogUI.SetActive(false);
+        if (player) 
+        {
+            player.IsPaused = false;
+        }
+        
         StopAllCoroutines();
         dialogText.text = "";
         generalManager.GetComponent<UIGameManager>().DialogueEnd(this.gameObject);

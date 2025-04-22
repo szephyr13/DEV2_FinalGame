@@ -26,17 +26,81 @@ public class Player : MonoBehaviour
     [SerializeField] private UIGameManager uiGameManager;
     private CharacterController controller;
     private Animator anim;
+    private bool isPaused;
+    private bool hasKey;
+
+
+    //colliding variables
+    private bool nearLockedDoor;
+    private bool nearUnlockableDoor;
+    private bool nearUnlockedDoor;
+    private Door nearDoor;
+    private bool showingDoorInfo;
+
+
+
+    public bool IsPaused { get => isPaused; set => isPaused = value; }
+    public bool HasKey { get => hasKey; set => hasKey = value; }
+    public Door NearDoor { get => nearDoor; set => nearDoor = value; }
+    public bool NearLockedDoor { get => nearLockedDoor; set => nearLockedDoor = value; }
+    public bool NearUnlockableDoor { get => nearUnlockableDoor; set => nearUnlockableDoor = value; }
+    public bool NearUnlockedDoor { get => nearUnlockedDoor; set => nearUnlockedDoor = value; }
 
     void OnEnable()
     {
         inputManager.OnJumping += JumpAction;
         inputManager.OnMoving += MoveAction;
         inputManager.OnInteracting += InteractAction;
+        inputManager.OnPausing += PauseAction;
+    }
+
+    private void PauseAction()
+    {
+        if (!isPaused) 
+        {
+            uiGameManager.PauseMenu();
+        } else 
+        {
+            uiGameManager.Unpause();
+        }
+        
     }
 
     private void InteractAction()
     {
         uiGameManager.Interaction();
+        if (!showingDoorInfo)
+        {
+            if(NearUnlockedDoor)
+            {
+                NearDoor.OpenDoor();
+                nearUnlockedDoor = false;
+                nearDoor = null;
+            }
+            else if (NearLockedDoor)
+            {
+                NearDoor.DoesntOpen();
+                showingDoorInfo = true;
+            }
+            else if (NearUnlockableDoor)
+            {
+                NearDoor.NeedsKey();
+                showingDoorInfo = true;
+            }
+        } else 
+        {
+            if (NearLockedDoor)
+            {
+                NearDoor.gameObject.GetComponent<TextManager>().DisplayNextSentence();
+                showingDoorInfo = false;
+            }
+            else if (NearUnlockableDoor)
+            {
+                NearDoor.gameObject.GetComponent<TextManager>().DisplayNextSentence();
+                showingDoorInfo = false;
+            }
+        }
+        
     }
 
     private void MoveAction(Vector2 ctx)
@@ -64,11 +128,17 @@ public class Player : MonoBehaviour
         //gets character controller
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        HasKey = false;
+        showingDoorInfo = false;
     }
 
 
     void Update()
     {
+        if (isPaused)
+        {
+        } else 
+        {
         MovementLogic();
 
         if (CheckOnGround() && verticalSpeed.y < 0)
@@ -76,6 +146,9 @@ public class Player : MonoBehaviour
             verticalSpeed.y = 0;
         }
         CheckGravity();
+        }
+
+        
     }
 
     private void MovementLogic()
@@ -116,5 +189,42 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawSphere(feetPosition.position, groundDetectionDistance);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("UnlockedDoor"))
+        {
+            NearUnlockedDoor = true;
+            NearDoor = other.gameObject.GetComponent<Door>();
+        }
+        else if (other.CompareTag("UnlockableDoor"))
+        {
+            NearUnlockableDoor = true;
+            NearDoor = other.gameObject.GetComponent<Door>();
+        }
+        else if (other.CompareTag("LockedDoor"))
+        {
+            NearLockedDoor = true;
+            NearDoor = other.gameObject.GetComponent<Door>();
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag("UnlockedDoor"))
+        {
+            NearUnlockedDoor = false;
+            NearDoor = null;
+        }
+        else if(other.CompareTag("UnlockableDoor"))
+        {
+            NearUnlockableDoor = false;
+            NearDoor = null;
+        }
+        else if(other.CompareTag("LockedDoor"))
+        {
+            NearLockedDoor = false;
+            NearDoor = null;
+        }
     }
 }

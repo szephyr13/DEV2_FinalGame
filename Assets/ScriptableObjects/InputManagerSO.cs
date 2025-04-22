@@ -11,6 +11,7 @@ public class InputManagerSO : ScriptableObject
     public event Action OnJumping;
     public event Action<Vector2> OnMoving;
     public event Action OnInteracting;
+    public event Action OnPausing;
     void OnEnable()
     {
         myControls = new Controls();
@@ -19,6 +20,8 @@ public class InputManagerSO : ScriptableObject
         myControls.Player.Move.performed += MoveAction;
         myControls.Player.Move.canceled += MoveAction;
         myControls.Player.Interact.started += InteractAction;
+        myControls.Player.Pause.started += PauseAction;
+
     }
 
     private void InteractAction(InputAction.CallbackContext ctx)
@@ -36,5 +39,9 @@ public class InputManagerSO : ScriptableObject
         OnMoving?.Invoke(ctx.ReadValue<Vector2>());
     }
 
+    private void PauseAction(InputAction.CallbackContext ctx)
+    {
+        OnPausing?.Invoke();
+    }
 
 }
