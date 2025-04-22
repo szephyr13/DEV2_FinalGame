@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenuCanvas : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject mainButtonsSet;
     [SerializeField] private GameObject optionsSet;
