@@ -7,6 +7,8 @@ TagManager:
   - UnlockedDoor
   - LockedDoor
   - UnlockableDoor
+  - Key
+  - Victory
   layers:
   - Default
   - TransparentFX

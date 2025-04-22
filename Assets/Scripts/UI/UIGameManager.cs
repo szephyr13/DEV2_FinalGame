@@ -2,6 +2,7 @@ using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class UIGameManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class UIGameManager : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button pauseMainButton;
     [SerializeField] private GameObject youLostScreen;
     [SerializeField] private UnityEngine.UI.Button lostMainButton;
+    [SerializeField] private GameObject youWonScreen;
+    [SerializeField] private UnityEngine.UI.Button wonMainButton;
     [SerializeField] private Player player;
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
@@ -27,7 +30,7 @@ public class UIGameManager : MonoBehaviour
         intro = true;
         lost = false;
         player = FindAnyObjectByType<Player>();
-        timeLeft = 5f;
+        timeLeft = 120f;
     }
 
     void Update()
@@ -40,15 +43,29 @@ public class UIGameManager : MonoBehaviour
 
         if (timeLeft <= 0 && lost == false)
         {
-            Time.timeScale = 0f;
-            player.IsPaused = true;
-            AudioManager.instance.PlayBGM("Lost");
-            youLostScreen.SetActive(true);
-            lostMainButton.Select();
-            lost = true;
+            YouLost();
         }
     }
 
+    private void YouLost()
+    {
+        Time.timeScale = 0f;
+        player.IsPaused = true;
+        AudioManager.instance.PlayBGM("Lost");
+        youLostScreen.SetActive(true);
+        lostMainButton.Select();
+        lost = true;
+    }
+
+    public void YouWon()
+    {
+        player.IsPaused = true;
+        Time.timeScale = 0f;
+        AudioManager.instance.PlayBGM("Menu");
+        AudioManager.instance.PlaySFX("YouWon");
+        youWonScreen.SetActive(true);
+        wonMainButton.Select();
+    }
 
     public void Interaction() 
     {
@@ -74,6 +91,12 @@ public class UIGameManager : MonoBehaviour
             player.NearLockedDoor = false;
             player.NearUnlockableDoor = false;
             player.NearUnlockedDoor = false;
+        }
+        if (whoEnded.name == "Key")
+        {
+            player.HasKey = true;
+            AudioManager.instance.PlaySFX("GotKey");
+            Destroy(whoEnded);
         }
     }
 

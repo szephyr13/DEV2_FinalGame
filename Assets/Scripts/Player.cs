@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputManagerSO inputManager;
     [SerializeField] private UIGameManager uiGameManager;
+    [SerializeField] private GameObject interactionKeys;
     private CharacterController controller;
     private Animator anim;
     private bool isPaused;
@@ -36,6 +38,9 @@ public class Player : MonoBehaviour
     private bool nearUnlockedDoor;
     private Door nearDoor;
     private bool showingDoorInfo;
+    private bool nearKey;
+    private Collider key;
+    private bool takingKey;
 
 
 
@@ -76,16 +81,26 @@ public class Player : MonoBehaviour
                 NearDoor.OpenDoor();
                 nearUnlockedDoor = false;
                 nearDoor = null;
+                interactionKeys.SetActive(false);
             }
             else if (NearLockedDoor)
             {
                 NearDoor.DoesntOpen();
                 showingDoorInfo = true;
+                interactionKeys.SetActive(false);
             }
-            else if (NearUnlockableDoor)
+            else if (NearUnlockableDoor && !hasKey)
             {
                 NearDoor.NeedsKey();
                 showingDoorInfo = true;
+                interactionKeys.SetActive(false);
+            }
+            else if (NearUnlockableDoor && HasKey)
+            {
+                NearDoor.OpenDoor();
+                nearUnlockableDoor = false;
+                nearDoor = null;
+                interactionKeys.SetActive(false);
             }
         } else 
         {
@@ -93,12 +108,25 @@ public class Player : MonoBehaviour
             {
                 NearDoor.gameObject.GetComponent<TextManager>().DisplayNextSentence();
                 showingDoorInfo = false;
+                interactionKeys.SetActive(false);
             }
             else if (NearUnlockableDoor)
             {
                 NearDoor.gameObject.GetComponent<TextManager>().DisplayNextSentence();
                 showingDoorInfo = false;
+                interactionKeys.SetActive(false);
             }
+        }
+        if(nearKey && !takingKey)
+        {
+            key.gameObject.GetComponent<TextManager>().StartDialogue();
+            takingKey = true;
+            interactionKeys.SetActive(false);
+        }
+        else if (nearKey && takingKey)
+        {
+            key.gameObject.GetComponent<TextManager>().DisplayNextSentence();
+            interactionKeys.SetActive(false);
         }
         
     }
@@ -137,7 +165,9 @@ public class Player : MonoBehaviour
     {
         if (isPaused)
         {
-        } else 
+            anim.SetFloat("speed", 0);
+        } 
+        else 
         {
         MovementLogic();
 
@@ -195,36 +225,63 @@ public class Player : MonoBehaviour
     {
         if(other.CompareTag("UnlockedDoor"))
         {
+            interactionKeys.SetActive(true);
+            AudioManager.instance.PlaySFX("Hover");
             NearUnlockedDoor = true;
             NearDoor = other.gameObject.GetComponent<Door>();
         }
         else if (other.CompareTag("UnlockableDoor"))
         {
+            interactionKeys.SetActive(true);
+            AudioManager.instance.PlaySFX("Hover");
             NearUnlockableDoor = true;
             NearDoor = other.gameObject.GetComponent<Door>();
         }
         else if (other.CompareTag("LockedDoor"))
         {
+            interactionKeys.SetActive(true);
+            AudioManager.instance.PlaySFX("Hover");
             NearLockedDoor = true;
             NearDoor = other.gameObject.GetComponent<Door>();
+        }
+        else if(other.CompareTag("Key"))
+        {
+            interactionKeys.SetActive(true);
+            AudioManager.instance.PlaySFX("Hover");
+            nearKey = true;
+            key = other;
+        }
+
+        if (other.CompareTag("Victory"))
+        {
+            uiGameManager.YouWon();
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if(other.CompareTag("UnlockedDoor"))
         {
+            interactionKeys.SetActive(false);
             NearUnlockedDoor = false;
             NearDoor = null;
         }
         else if(other.CompareTag("UnlockableDoor"))
         {
+            interactionKeys.SetActive(false);
             NearUnlockableDoor = false;
             NearDoor = null;
         }
         else if(other.CompareTag("LockedDoor"))
         {
+            interactionKeys.SetActive(false);
             NearLockedDoor = false;
             NearDoor = null;
+        }
+        else if(other.CompareTag("Key"))
+        {
+            interactionKeys.SetActive(false);
+            nearKey = false;
+            key = null;
         }
     }
 }

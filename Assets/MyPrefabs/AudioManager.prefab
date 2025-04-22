@@ -51,6 +51,8 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 21b1d6ccba6a34c78af9cd4aae8081ed, type: 3}
   - audioName: Game
     audioClip: {fileID: 8300000, guid: a8c4c8c206a0f4a2b96f6c407d19f611, type: 3}
+  - audioName: Lost
+    audioClip: {fileID: 8300000, guid: e0bdced4a72bd4e278ef2c662486ba07, type: 3}
   sfxAudio:
   - audioName: Click
     audioClip: {fileID: 8300000, guid: 902ed6366cca140db990f9a817a320b9, type: 3}
@@ -60,6 +62,12 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: e090c71de02594c6ca31a984b45ea657, type: 3}
   - audioName: Play
     audioClip: {fileID: 8300000, guid: 6e2e9cff5d9bb467892cff00169e5870, type: 3}
+  - audioName: GotKey
+    audioClip: {fileID: 8300000, guid: ff65f2a7ed721476c9c5021b9f16ac7c, type: 3}
+  - audioName: YouWon
+    audioClip: {fileID: 8300000, guid: e9f7ebf1bd0364578a8ffe94d996f6a5, type: 3}
+  - audioName: Open
+    audioClip: {fileID: 8300000, guid: aabdd601ce129443d8cbe9631da66d1f, type: 3}
   bgmSource: {fileID: 39852061777865}
   sfxSource: {fileID: 3360655652176106660}
 --- !u!1 &1128370286953953463

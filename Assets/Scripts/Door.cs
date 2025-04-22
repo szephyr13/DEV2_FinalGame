@@ -18,7 +18,8 @@ public class Door : MonoBehaviour
     public void OpenDoor()
     {
         anim.enabled = true;
-        
+        AudioManager.instance.PlaySFX("Open");
+
         if(this.gameObject.name == "Door_A")
         {
             anim.Play("MetDoor@Opening");
