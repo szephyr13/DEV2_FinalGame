@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     //input, controller, animations
     [Header("Input")]
     [SerializeField] private InputManagerSO inputManager;
+    [SerializeField] private UIGameManager uiGameManager;
     private CharacterController controller;
     private Animator anim;
 
@@ -30,6 +31,12 @@ public class Player : MonoBehaviour
     {
         inputManager.OnJumping += JumpAction;
         inputManager.OnMoving += MoveAction;
+        inputManager.OnInteracting += InteractAction;
+    }
+
+    private void InteractAction()
+    {
+        uiGameManager.Interaction();
     }
 
     private void MoveAction(Vector2 ctx)

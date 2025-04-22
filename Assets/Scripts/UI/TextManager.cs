@@ -4,21 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal;
 
 
 public class TextManager : MonoBehaviour
 {
     private Queue<string> introduction;
-    [SerializeField] private Text text;
-    [SerializeField] private TextMeshProUGUI intro;
+    [SerializeField] private ConversationPart text;
+    [SerializeField] private GameObject dialogUI;
+    [SerializeField] private GameObject nextSquare;
+    [SerializeField] private TextMeshProUGUI dialogText;
     [SerializeField] private bool typingOver;
     [SerializeField] private GameObject generalManager;
 
-    public Text Text { get => text; set => text = value; }
+    public ConversationPart Text { get => text; set => text = value; }
 
     //lists text to write on screen and enqueues it. then starts showing
     public void StartDialogue()
     {
+        Debug.Log("Text Manager executed by " + this.gameObject.name);
+        dialogUI.SetActive(true);
         introduction = new Queue<string>();
         typingOver = true;
 
@@ -33,7 +38,8 @@ public class TextManager : MonoBehaviour
     // if there are no more sentences, ends dialogue
     public void DisplayNextSentence()
     {
-        AudioManager.instance.PlaySFX("UISelect");
+        nextSquare.SetActive(false);
+        AudioManager.instance.PlaySFX("Click");
         if (introduction.Count == 0 && typingOver == true)
         {
             EndDialogue();
@@ -53,22 +59,24 @@ public class TextManager : MonoBehaviour
     //types each letter in the sentence. when over, informs of it with a bool
     IEnumerator TypeSentence(string sentence)
     {
-        intro.text = "";
+        dialogText.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
             typingOver = false;
-            intro.text += letter;
-            yield return new WaitForSeconds(0f);
+            dialogText.text += letter;
+            yield return new WaitForSeconds(0.05f);
         }
         typingOver = true;
+        nextSquare.SetActive(true);
     }
 
     //when ending, stops coroutines and tells UIManager to get to the next screen
     private void EndDialogue()
     {
+        dialogUI.SetActive(false);
         StopAllCoroutines();
-        intro.text = "";
-        //generalManager.GetComponent<UIManager>().NextScreen();
+        dialogText.text = "";
+        generalManager.GetComponent<UIGameManager>().DialogueEnd(this.gameObject);
     }
 
 }

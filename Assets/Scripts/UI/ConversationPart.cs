@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class Text
+public class ConversationPart
 {
     [TextArea(3,10)]
     public string[] sentence;
