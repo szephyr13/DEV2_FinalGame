@@ -13,7 +13,6 @@ public class AudioManager : MonoBehaviour
 
     public static AudioManager instance;
 
-
     //instance in order to load this script info from anywhere
     private void Awake()
     {
@@ -28,16 +27,11 @@ public class AudioManager : MonoBehaviour
             return;
         }
     }
-
-
     //at start, play theme music
     private void Start()
     {
         PlayBGM("Menu");
     }
-
-
-
     //bgm (continuous) finding and playing logic
     public void PlayBGM(string title)
     {
@@ -51,8 +45,6 @@ public class AudioManager : MonoBehaviour
             bgmSource.Play();
         }
     }
-
-
     //sfx (just one time) finding and playing logic
     public void PlaySFX (string title)
     {
@@ -66,7 +58,6 @@ public class AudioManager : MonoBehaviour
             sfxSource.PlayOneShot(sound.audioClip);
         }
     }
-
     public void StopMusic()
     {
         bgmSource.Stop();
